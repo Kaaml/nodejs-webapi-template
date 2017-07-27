@@ -46,7 +46,9 @@ export class WebServer {
     addCors() {
         this.app.use(cors());
     }
-    addMiddelware(middleware: BasicMiddleware) {
+    addMiddelware<T extends BasicMiddleware>(objType: any, symbol: string) {
+        this.addServiceSingleton<T>(symbol, objType);
+        let middleware =  this._container.get<T>(symbol);
         this.app.use((error, req, res, next) => {
             let context = new AppContext(req, res, next);
             context.Parameters = {

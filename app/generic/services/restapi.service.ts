@@ -3,13 +3,13 @@
 //import { UserModel } from "../../models/user/user.model";
 import { Authorize } from "../authorization/authorize.interface";
 import { ServiceContext } from "../context/service.context";
-import {Express } from 'express';
-import { inject , injectable} from "inversify";
+import { Express } from 'express';
+import { inject, injectable } from "inversify";
 @injectable()
 export class RestApiService {
 
-    constructor(@inject('Express') private server: Express, 
-    @inject('Authorize') private authorizeService: Authorize) {
+    constructor( @inject('Express') private server: Express,
+        @inject('Authorize') private authorizeService: Authorize) {
 
     }
     private initializeService<T>(serviceInstance: T, callback: (context: ServiceContext<T>) => void): (req: any, res: any, next: (arg) => void) => void {
@@ -49,5 +49,11 @@ export class RestApiService {
     }
     public initializeDeleteService<T>(url: string, serviceInstance: T, callback: (context: ServiceContext<T>) => void) {
         this.server.delete(url, this.initializeService<T>(serviceInstance, callback));
+    }
+    public initializePatchService<T>(url: string, serviceInstance: T, callback: (context: ServiceContext<T>) => void) {
+        this.server.patch(url, this.initializeService<T>(serviceInstance, callback));
+    }
+    public initializeHeadService<T>(url: string, serviceInstance: T, callback: (context: ServiceContext<T>) => void) {
+        this.server.head(url, this.initializeService<T>(serviceInstance, callback));
     }
 }

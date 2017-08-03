@@ -32,8 +32,7 @@ export class RestApiService {
             }
             else {
                 //TODO: implement access denied
-                //next()
-                //res.status(403).json(DictionaryUtil.AccesDenied());
+
             }
         }).catch(error => context.next(error));
     }

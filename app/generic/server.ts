@@ -46,13 +46,24 @@ export class WebServer {
     addCors() {
         this.app.use(cors());
     }
-    addMiddelware<T extends BasicMiddleware>(objType: any, symbol: string) {
+     addErrorMiddelware<T extends BasicMiddleware>(objType: any, symbol: string) {
         this.addServiceSingleton<T>(symbol, objType);
         let middleware =  this._container.get<T>(symbol);
         this.app.use((error, req, res, next) => {
             let context = new AppContext(req, res, next);
             context.Parameters = {
-                Error: error
+               Error: error
+            }
+            middleware.initialize(context);
+        });
+    }
+    addMiddelware<T extends BasicMiddleware>(objType: any, symbol: string) {
+        this.addServiceSingleton<T>(symbol, objType);
+        let middleware =  this._container.get<T>(symbol);
+        this.app.use(( req, res, next) => {
+            let context = new AppContext(req, res, next);
+            context.Parameters = {
+               
             }
             middleware.initialize(context);
         });
